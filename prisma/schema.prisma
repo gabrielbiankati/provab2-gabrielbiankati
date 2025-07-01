@@ -6,3 +6,16 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Book {
+  id                    String   @id @default(uuid())
+  title                 String   @unique
+  author                String
+  publicationYear       Int
+  isbn                  String    @unique      
+
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime? @updatedAt @map("updated_at")
+
+  @@map("books")
+}
