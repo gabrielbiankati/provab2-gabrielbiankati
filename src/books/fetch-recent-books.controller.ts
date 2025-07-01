@@ -1,7 +1,7 @@
 import { Controller, Get, HttpCode } from "@nestjs/common";
 import { FetchRecentBooksService } from "./fetch-recent-books.service";
 
-@Controller('/products')
+@Controller('/books')
 export class FetchRecentBooksController {
   constructor(private fetchRecentBooks: FetchRecentBooksService) {}
 
