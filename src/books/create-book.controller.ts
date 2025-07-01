@@ -1,29 +1,38 @@
 import { Body, Controller, HttpCode, Post } from "@nestjs/common";
-import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
+import { ZodValidationPipe } from "src/pipes/zod-validation-pipe"; 
 import { z } from "zod";
-import { CreateModelService } from "./create-book.service"; 
+import { CreateBookService } from "./create-book.service";
 
-const createModelBodySchema = z.object({
-  name: z.string(),
+const createBookBodySchema = z.object({
+  title: z.string(),
+  author: z.string(),
+  publicationYear: z.number(),
+  isbn: z.string()
 });
 
-const bodyValidationPipe = new ZodValidationPipe(createModelBodySchema);
+const bodyValidationPipe = new ZodValidationPipe(createBookBodySchema);
 
-type CreateModelBodySchema = z.infer<typeof createModelBodySchema>;
+type CreateProductBodySchema = z.infer<typeof createBookBodySchema>;
 
-@Controller('/models')
-export class CreateModelController {
-  constructor(private createModel: CreateModelService) {}
+@Controller('/books')
+export class CreateBookController {
+  constructor(private createBook: CreateBookService) {}
 
   @Post()
   @HttpCode(201)
-  async handle(@Body(bodyValidationPipe) body: CreateModelBodySchema) {
+  async handle(@Body(bodyValidationPipe) body: CreateProductBodySchema) {
     const {
-      name,
+      title,
+      author,
+      publicationYear,
+      isbn,
     } = body;
 
-    await this.createModel.execute({
-      name,
+    await this.createBook.execute({
+      title,
+      author,
+      publicationYear,
+      isbn,
     });
   }
 }

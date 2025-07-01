@@ -1,23 +1,34 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { ModelsRepository } from "./models.repository"; 
+import { BadRequestException, ConflictException, Injectable } from "@nestjs/common"; 
+import { BookRepository } from "./books.repository";
 
-interface CreateModelServiceRequest {
-  name: string;
+interface CreateBookServiceRequest {
+  title: string;
+  author: string;
+  publicationYear: number;
+  isbn: string;       
 }
 
 @Injectable()
-export class CreateModelService {
-  constructor(private modelsRepository: ModelsRepository) {}
+export class CreateBookService {
+  constructor(private booksRepository: BookRepository) {}
 
   async execute({
-    name,
-  }: CreateModelServiceRequest): Promise<void> {
-    const modelWithSameName = await this.modelsRepository.findByName(name);
+    title,
+    author,
+    publicationYear,
+    isbn,
+  }: CreateBookServiceRequest): Promise<void> {
+    const productWithSameName = await this.booksRepository.findByTitle(title);
 
-    if (modelWithSameName) {
-      throw new BadRequestException("Model with same name already exists.");
+    if (productWithSameName) {
+      throw new ConflictException("Book with same name already exists.");
     }
 
-    await this.modelsRepository.create({ name });
+    await this.booksRepository.create({
+    title,
+    author,
+    publicationYear,
+    isbn,
+    });
   }
 }
